@@ -23,3 +23,7 @@
 .cell.selectable:hover{
     background-color: #20B2AA;
 }
+.title{
+    text-align: center;
+    font-size: 26px;
+}

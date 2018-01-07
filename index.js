@@ -23,7 +23,7 @@ $(document).ready(function () {
     });
     let board = new Board();
     ws.onmessage = function incoming(response) {
-        msg = JSON.parse(response.data);
+        let msg = JSON.parse(response.data);
         if (msg.action === 'start' || msg.action === 'continue') {
             $("#loader").addClass('hidden');
             let myTurn=false;
@@ -36,9 +36,14 @@ $(document).ready(function () {
             }
             board.drawBoard(myTurn);
         }
+        else if(msg.action === 'end') {
+            $("#loader").addClass('hidden');
+            board.lines=msg.board.lines;
+            board.drawBoard(false, msg.message);
+        }
     };
     $('body').on('click', '.cell.selectable', function () {
-        board.lines[$(this).data('index')]=board.currentPlayer;
+        board.move($(this).data('index'));
         board.drawBoard();
         ws.send(JSON.stringify({"action": "move", "board": board}));
     });

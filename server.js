@@ -31,9 +31,24 @@ wss.on('connection', function connection(ws) {
                 games[gameId].start();
             }
         }
+        if(msg.action==='existingGame'){
+            players[id].name=msg.name;
+            
+        }
         else if(msg.action==='move'){
-            games[msg.board.currentGame].board.lines=msg.board.lines;
-            games[msg.board.currentGame].continue();
+            if(games[msg.board.currentGame].board.moveIsValid(msg.board)){
+                games[msg.board.currentGame].board.lines=msg.board.lines;
+                let winner=games[msg.board.currentGame].board.gameEnded();
+                if(winner!==false){
+                    games[msg.board.currentGame].sendWinners(winner);
+                }
+                else{
+                    games[msg.board.currentGame].switchPlayers(true);
+                }
+            }
+            else{
+                games[msg.board.currentGame].switchPlayers(false);
+            }
         }
     });
     ws.on('close', function close(ws) {
