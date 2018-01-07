@@ -2,23 +2,35 @@
 <html>
 <head>
     <title>Tic Tac Toe Game</title>
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <style>
-        .align-center{
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="index.css">
 </head>
 <body>
 <div class="container">
     <div class="jumbotron">
         <h1 class="align-center">Tic Tac Toe Game</h1>
     </div>
-</div>
+    <div class="content">
+        <div class="join-game">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name">
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <button type="button" id="new" class="btn btn-dark col-md-6">New game</button>
+                    <button type="button" id="existing" class="btn btn-secondary col-md-6">Join existing game</button>
+                </div>
+            </div>
+        </div>
 
+    </div>
+</div>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"
         integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
 <script src="index.js"></script>
 </body>
 </html>
