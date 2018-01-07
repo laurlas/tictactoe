@@ -47,6 +47,7 @@ class Game{
         this.board.currentPlayer="0";
         this.o.ws.send(JSON.stringify({"action":"continue","board":this.board, "turn":this.turn}));
     }
+
 }
 
 if (typeof global !== 'undefined') {

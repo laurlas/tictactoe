@@ -1,6 +1,7 @@
 $(document).ready(function () {
     let ws = new WebSocket('ws://localhost:8098');
     $("#new").click(function () {
+        $('.title').remove();
         if ($("#name").val() == "") {
             alert("Please enter your name");
         }
@@ -40,6 +41,13 @@ $(document).ready(function () {
             $("#loader").addClass('hidden');
             board.lines=msg.board.lines;
             board.drawBoard(false, msg.message);
+        }
+        else if(msg.action === 'restart') {
+            $("#loader").addClass('hidden');
+            $(".join-game").removeClass('hidden');
+            $('.title').remove();
+            let html = '<p class="title">No game found. Please try again</p>';
+            $('body').append(html);
         }
     };
     $('body').on('click', '.cell.selectable', function () {

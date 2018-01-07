@@ -15,8 +15,6 @@ let count=0;
 let gameCount=0;
 
 wss.on('connection', function connection(ws) {
-    ws.player='none';
-    ws.partner='none';
     let id = count++;
     players[id]=new Player(id, ws);
 
@@ -33,7 +31,19 @@ wss.on('connection', function connection(ws) {
         }
         if(msg.action==='existingGame'){
             players[id].name=msg.name;
-            
+            let game = findJoinableGame();
+            if(game===false){
+                sendRestart(players[id]);
+            }
+            else{
+                if(game.x==""){
+                    game.x=players[id];
+                }
+                else if(game.o==""){
+                    game.o=players[id];
+                }
+                game.switchPlayers(false);
+            }
         }
         else if(msg.action==='move'){
             if(games[msg.board.currentGame].board.moveIsValid(msg.board)){
@@ -52,6 +62,7 @@ wss.on('connection', function connection(ws) {
         }
     });
     ws.on('close', function close(ws) {
+        removePlayerFromGame(id);
         delete players[id];
         console.log('close');
     });
@@ -85,4 +96,33 @@ function assignplayers(){
         return false;
     }
 }
-
+function removePlayerFromGame(player) {
+    for (game in games) {
+        if (games[game].x.id === player) {
+            games[game].x = "";
+            break;
+        }
+        else if (games[game].o.id === player) {
+            games[game].o = "";
+            break;
+        }
+    }
+}
+function findJoinableGame(){
+    for (game in games) {
+        if(games[game].isEnded===false){
+            if(games[game].x===""){
+                return games[game];
+                break;
+            }
+            else if(games[game].o===""){
+                return games[game];
+                break;
+            }
+        }
+    }
+    return false;
+}
+function sendRestart(player){
+    player.ws.send(JSON.stringify({"action":"restart"}));
+}
