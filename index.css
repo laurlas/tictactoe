@@ -9,3 +9,17 @@
 .align-center {
     text-align: center;
 }
+.board{
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}
+.cell{
+    height: 100px;
+    border: 1px solid #000;
+    font-size: 52px;
+    padding: 0 42px;
+}
+.cell.selectable:hover{
+    background-color: #20B2AA;
+}

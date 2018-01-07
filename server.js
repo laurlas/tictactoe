@@ -1,3 +1,6 @@
+require('./Board.js');
+require('./Player.js');
+require('./Game.js');
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
@@ -23,11 +26,14 @@ wss.on('connection', function connection(ws) {
             players[id].name=msg.name;
             let pair = assignplayers();
             if(pair) {
-                let gameId = count++;
-                gameCount++;
-                games[gameId]= new Game(gameCount, players[pair.x], players[pair.o]);
+                let gameId = gameCount++;
+                games[gameId]= new Game(gameId, players[pair.x], players[pair.o]);
                 games[gameId].start();
             }
+        }
+        else if(msg.action==='move'){
+            games[msg.board.currentGame].board.lines=msg.board.lines;
+            games[msg.board.currentGame].continue();
         }
     });
     ws.on('close', function close(ws) {
@@ -64,46 +70,4 @@ function assignplayers(){
         return false;
     }
 }
-class Game{
-    constructor(id,x,o) {
-        this.id= id;
-        this.board= new Board();
-        this.x= x;
-        this.o= o;
-        this.x.assigned=true;
-        this.o.assigned=true;
-        console.log(players);
-    }
-    start(){
-        this.x.send(JSON.stringify({"action":"start","player":"x","game":this.id}));
-        this.o.send(JSON.stringify({"action":"start","player":"o","game":this.id}));
-    }
-}
-class Player{
-    constructor(id,ws , name) {
-        this.id=id;
-        this.ws=ws;
-        this.assigned=false;
-        if(typeof name !== 'undefined'){
-            this.name = name;
-        }
-        else {
-            this.name = "";
-        }
-    }
-}
-class Board {
-    constructor(lines) {
-        if(typeof lines !== 'undefined'){
-            this.lines = lines;
-        }
-        else {
-            this.lines = [
-                "", "", "",
-                "", "", "",
-                "", "", ""
-            ];
-        }
-    }
 
-}
