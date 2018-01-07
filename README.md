@@ -3,6 +3,8 @@ A multiplayer tic tac toe game using nodejs and websockets
 
 Use tictactoe to import db structure.
 
+DB type is mysql.
+
 Default DB login are 
 	-host: "localhost",
     -user: "root",
