@@ -5,9 +5,24 @@ const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
 const app = express();
+const mysql = require('mysql');
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({server});
+
+const con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "tictactoe"
+});
+
+con.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected!");
+
+});
+
 let players = [];
 let games = [];
 
@@ -49,8 +64,9 @@ wss.on('connection', function connection(ws) {
             if(games[msg.board.currentGame].board.moveIsValid(msg.board)){
                 games[msg.board.currentGame].board.lines=msg.board.lines;
                 let winner=games[msg.board.currentGame].board.gameEnded();
+
                 if(winner!==false){
-                    games[msg.board.currentGame].sendWinners(winner);
+                    games[msg.board.currentGame].sendWinners(winner, con);
                 }
                 else{
                     games[msg.board.currentGame].switchPlayers(true);

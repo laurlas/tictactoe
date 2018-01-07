@@ -16,7 +16,7 @@ class Game{
         this.board.currentPlayer="0";
         this.o.ws.send(JSON.stringify({"action":"start","board":this.board, "turn":this.turn}));
     }
-    sendWinners(winner){
+    sendWinners(winner, con){
         if(winner!==false){
             this.isEnded=true;
             if(winner==='draw'){
@@ -31,6 +31,7 @@ class Game{
                 this.x.ws.send(JSON.stringify({"action":"end","board":this.board, "message":"You lost!"}));
                 this.o.ws.send(JSON.stringify({"action":"end","board":this.board, "message":"You won!"}));
             }
+            this.persistResult(con, this.id,this.x.name,this.o.name,winner);
         }
     }
     switchPlayers(valid){
@@ -46,6 +47,12 @@ class Game{
         this.x.ws.send(JSON.stringify({"action":"continue","board":this.board, "turn":this.turn}));
         this.board.currentPlayer="0";
         this.o.ws.send(JSON.stringify({"action":"continue","board":this.board, "turn":this.turn}));
+    }
+    persistResult(con, game_id, player_x,player_0,winner){
+        var sql = "INSERT INTO results (game_id, player_x, player_0, winner) VALUES ('"+game_id+"','"+player_x+"','"+player_0+"','"+winner+"')";
+        con.query(sql, function (err, result) {
+            if (err) throw err;
+        });
     }
 
 }
